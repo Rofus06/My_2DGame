@@ -11,19 +11,19 @@ public class Background : MonoBehaviour
 
     void Start()
     {
-        // Store the initial y-position of the background
+        // Lagra bakgrundens initiala y-position
         initialPosition = transform.position.y;
     }
 
     void Update()
     {
-        // Move the background downward based on the scrollSpeed
+        // rör sig ner ifrån speeden som gers
         transform.Translate(Vector2.down * scrollSpeed * Time.deltaTime);
 
-        // Check if the background is below the reset position
+        // Kontrollera om bakgrunden är under återställningspositionen
         if (transform.position.y < resetPosition)
         {
-            // Move the background to the initial position to create a looping effect
+            // Flytta bakgrunden till utgångsläget för att skapa en loopeffekt
             transform.position = new Vector2(transform.position.x, initialPosition);
         }
     }
