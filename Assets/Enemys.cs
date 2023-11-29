@@ -5,38 +5,56 @@ using UnityEngine;
 public class Enemys : MonoBehaviour
 {
     public float speed = 2f; // the speeed
+    public float moveDownSpeed = 2f; // spped ner den går ner
     public Transform Ship_Main; // Referens till spelarens skepp
+
+    private bool isMovingDown = true;
 
     void Update()
     {
-        transform.Translate(Vector2.down * speed * Time.deltaTime);
-
-        // Kontrollera om fienden är synlig och rör dig mot spelarens skepp
-        if (IsVisible())
+        if (isMovingDown)
         {
-            MoveTowardsPlayer();
+            MoveDown();
+        }
+        else
+        {
+            // Kontrollera om fienden är synlig och rör dig mot spelarens skepp
+            if (IsVisible())
+            {
+                MoveTowardsPlayer();
+            }
         }
     }
 
+    void MoveDown()
+    {
+        transform.Translate(Vector2.down * moveDownSpeed * Time.deltaTime);
+
+        // om enemy är synlig slutar den gå ner
+        if (IsVisible())
+        {
+            isMovingDown = false;
+        }
+    }
 
     void MoveTowardsPlayer()
     {
         if (Ship_Main != null)
         {
-            // Calculate the direction to the player's ship
+            // Beräkna riktningen till spelaren
             Vector2 direction = (Ship_Main.position - transform.position).normalized;
 
-            // Move the enemy towards the player's ship
+            // Flytta fienden mot spelaren
             transform.Translate(direction * speed * Time.deltaTime);
         }
     }
 
     bool IsVisible()
     {
-        // Check if the enemy is visible by any camera
+        // Kontrollera om fienden är synlig
         Renderer renderer = GetComponent<Renderer>();
 
-        // Check if the renderer and the GameObject are both active in the scene
+        // Kontrollera om renderaren och GameObject båda är aktiva i scenen
         bool isVisible = renderer != null && renderer.isVisible && gameObject.activeSelf;
 
         // Debug log
@@ -45,10 +63,9 @@ public class Enemys : MonoBehaviour
         return isVisible;
     }
 
-
     void ResetPosition()
     {
-        // Reset the enemy's position above the camera
+        // Återställ fiendens position ovanför kameran
         Camera mainCamera = Camera.main;
 
         if (mainCamera != null)
